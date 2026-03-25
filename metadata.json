@@ -1,0 +1,5 @@
+{
+  "name": "غرفة طوارئ بلدية مؤتة والمزار",
+  "description": "نظام إدارة الطوارئ لبلدية مؤتة والمزار، الأردن.",
+  "requestFramePermissions": ["geolocation"]
+}

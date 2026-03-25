@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+:root {
+  --color-brand-bg: #0a0a0c;
+  --color-brand-panel: #121216;
+  --color-brand-border: #1f1f27;
+  --color-brand-accent: #3b82f6;
+  --color-brand-danger: #ef4444;
+  --color-brand-warning: #f59e0b;
+  --color-brand-success: #10b981;
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #64748b;
+  --bg: #0a0a0c;
+  --ink: #ffffff;
+}
+
+.light {
+  --color-brand-bg: #f8fafc;
+  --color-brand-panel: #ffffff;
+  --color-brand-border: #e2e8f0;
+  --color-brand-accent: #2563eb;
+  --color-brand-danger: #dc2626;
+  --color-brand-warning: #d97706;
+  --color-brand-success: #059669;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --bg: #f8fafc;
+  --ink: #0f172a;
+}
+
+@theme {
+  --color-brand-bg: var(--color-brand-bg);
+  --color-brand-panel: var(--color-brand-panel);
+  --color-brand-border: var(--color-brand-border);
+  --color-brand-accent: var(--color-brand-accent);
+  --color-brand-danger: var(--color-brand-danger);
+  --color-brand-warning: var(--color-brand-warning);
+  --color-brand-success: var(--color-brand-success);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-brand-bg);
+  color: var(--text-secondary);
+  overflow: hidden;
+  font-family: "Cairo", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Leaflet Dark Mode Adjustments */
+.leaflet-container {
+  background: var(--color-brand-bg) !important;
+}
+
+.leaflet-tile {
+  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+  transition: filter 0.3s ease;
+}
+
+.light .leaflet-tile {
+  filter: none;
+}
+
+.leaflet-control-attribution {
+  background: rgba(var(--color-brand-bg), 0.5) !important;
+  color: var(--text-muted) !important;
+}
+
+.leaflet-bar a {
+  background-color: var(--color-brand-panel) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--color-brand-border) !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: var(--color-brand-border) !important;
+}
+
+/* Specific style changes requested by user */
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > svg:nth-of-type(1) > g:nth-of-type(1) > path:nth-of-type(10) {
+  filter: drop-shadow(0 0 8px var(--color-brand-accent));
+  stroke-width: 3px;
+  transition: all 0.3s ease;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(6) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
+  background: linear-gradient(135deg, var(--color-brand-panel) 0%, var(--color-brand-bg) 100%);
+  border-left: 4px solid var(--color-brand-accent);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(6) > div:nth-of-type(1) > a:nth-of-type(1) > span:nth-of-type(1) {
+  color: var(--color-brand-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f1f27;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d2d39;
+}
