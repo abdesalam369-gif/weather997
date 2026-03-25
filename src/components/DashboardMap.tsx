@@ -101,7 +101,7 @@ const CursorFollower = ({ type, moving }: { type: IncidentType | null, moving: b
   return (
     <CircleMarker 
       center={pos} 
-      radius={12} 
+      radius={24} 
       pathOptions={{ 
         color: '#3b82f6', 
         fillColor: '#3b82f6', 
@@ -209,7 +209,7 @@ export const DashboardMap: React.FC<MapViewProps> = ({
           <CircleMarker
             key={incident.id}
             center={incident.location}
-            radius={selectedIncidentId === incident.id ? 16 : 12}
+            radius={selectedIncidentId === incident.id ? 32 : 24}
             eventHandlers={{
               click: (e) => {
                 L.DomEvent.stopPropagation(e);
@@ -383,8 +383,8 @@ export const DashboardMap: React.FC<MapViewProps> = ({
         {isReportingPanelVisible && (
           <div className="bg-brand-panel/90 backdrop-blur-xl border border-brand-border p-3 rounded-2xl shadow-2xl flex flex-col gap-2 min-w-[200px] animate-in slide-in-from-top-4 duration-300">
             <div className="flex items-center justify-end gap-2 mb-2 px-1">
-              <h4 className="text-[10px] font-bold text-text-muted uppercase tracking-widest">إضافة بلاغ جديد</h4>
-              <Plus className="w-3 h-3 text-brand-accent" />
+              <h4 className="text-[12px] font-bold text-text-muted uppercase tracking-widest">إضافة بلاغ جديد</h4>
+              <Plus className="w-4 h-4 text-brand-accent" />
             </div>
             
             <div className="space-y-1">
@@ -399,9 +399,9 @@ export const DashboardMap: React.FC<MapViewProps> = ({
                       : "bg-brand-bg/50 text-text-secondary hover:bg-brand-accent/10 hover:text-brand-accent"
                   )}
                 >
-                  <span className="text-[11px] font-bold">{item.label}</span>
+                  <span className="text-[15px] font-bold">{item.label}</span>
                   <div className={cn(
-                    "w-2 h-2 rounded-full shrink-0",
+                    "w-5 h-5 rounded-full shrink-0",
                     item.severity === 'critical' ? 'bg-red-500' : item.severity === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
                   )} />
                 </button>
@@ -428,35 +428,35 @@ export const DashboardMap: React.FC<MapViewProps> = ({
           <>
             <div className="flex items-center justify-between gap-2 mb-4 flex-row-reverse">
               <div className="flex items-center gap-2 flex-row-reverse">
-                <h4 className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">دليل الخريطة</h4>
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
+                <h4 className="text-[12px] font-bold text-text-muted uppercase tracking-[0.2em]">دليل الخريطة</h4>
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-accent animate-pulse" />
               </div>
               <button 
                 onClick={() => setIsLegendCollapsed(true)}
                 className="p-1 text-text-muted hover:text-brand-danger transition-colors"
                 title="إخفاء"
               >
-                <X className="w-3 h-3" />
+                <X className="w-4 h-4" />
               </button>
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-end gap-3 group cursor-help">
-                <span className="text-[11px] text-text-secondary font-medium group-hover:text-text-primary transition-colors">حادث حرج</span>
+                <span className="text-[15px] text-text-secondary font-medium group-hover:text-text-primary transition-colors">حادث حرج</span>
                 <div className="relative">
-                  <div className="w-3 h-3 rounded-full bg-brand-danger" />
-                  <div className="absolute inset-0 w-3 h-3 rounded-full bg-brand-danger animate-ping opacity-20" />
+                  <div className="w-8 h-8 rounded-full bg-brand-danger" />
+                  <div className="absolute inset-0 w-8 h-8 rounded-full bg-brand-danger animate-ping opacity-20" />
                 </div>
               </div>
               
               <div className="flex items-center justify-end gap-3 group cursor-help">
-                <span className="text-[11px] text-text-secondary font-medium group-hover:text-text-primary transition-colors">تحذير / تنبيه</span>
-                <div className="w-3 h-3 rounded-full bg-brand-warning" />
+                <span className="text-[15px] text-text-secondary font-medium group-hover:text-text-primary transition-colors">تحذير / تنبيه</span>
+                <div className="w-8 h-8 rounded-full bg-brand-warning" />
               </div>
               
               <div className="flex items-center justify-end gap-3 group cursor-help">
-                <span className="text-[11px] text-text-secondary font-medium group-hover:text-text-primary transition-colors">طبيعي / تم الحل</span>
-                <div className="w-3 h-3 rounded-full bg-brand-success" />
+                <span className="text-[15px] text-text-secondary font-medium group-hover:text-text-primary transition-colors">طبيعي / تم الحل</span>
+                <div className="w-8 h-8 rounded-full bg-brand-success" />
               </div>
             </div>
           </>

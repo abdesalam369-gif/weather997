@@ -22,6 +22,36 @@ const App: React.FC = () => {
   const [showRadar, setShowRadar] = useState(true);
   const [showWind, setShowWind] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(288); // Default 72 * 4 = 288px
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResizing = useCallback(() => {
+    setIsResizing(true);
+  }, []);
+
+  const stopResizing = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
+  const resize = useCallback((mouseMoveEvent: MouseEvent) => {
+    if (isResizing) {
+      // Since we are in RTL, the sidebar is on the right.
+      // The width is calculated from the right edge of the screen.
+      const newWidth = window.innerWidth - mouseMoveEvent.clientX;
+      if (newWidth > 200 && newWidth < 600) {
+        setSidebarWidth(newWidth);
+      }
+    }
+  }, [isResizing]);
+
+  useEffect(() => {
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseup", stopResizing);
+    return () => {
+      window.removeEventListener("mousemove", resize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [resize, stopResizing]);
 
   const fetchWeather = useCallback(async () => {
     const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -79,11 +109,10 @@ const App: React.FC = () => {
     { type: 'حالة الطرق', severity: 'green' as const, message: 'جميع الطرق الرئيسية مفتوحة حالياً. الرؤية الأفقية تزيد عن 500 متر.' }
   ];
 
-  const handleAddIncident = useCallback((newIncident: Omit<Incident, 'id' | 'timestamp' | 'status'>) => {
+  const handleAddIncident = useCallback((newIncident: Omit<Incident, 'id' | 'timestamp'>) => {
     const incident: Incident = {
       ...newIncident,
       id: `manual-${Date.now()}`,
-      status: 'pending',
       timestamp: Date.now(),
     };
     setIncidents(prev => [incident, ...prev]);
@@ -98,7 +127,10 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-brand-bg text-white overflow-hidden" dir="rtl">
+    <div className={cn(
+      "flex flex-col h-screen w-screen bg-brand-bg text-white overflow-hidden",
+      isResizing && "select-none cursor-col-resize"
+    )} dir="rtl">
       {/* API Key Warning Overlay (Only visible if key is missing and radar is requested) */}
       {showRadar && (!import.meta.env.VITE_OPENWEATHER_API_KEY || import.meta.env.VITE_OPENWEATHER_API_KEY === 'YOUR_API_KEY_HERE') && (
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[2000] bg-brand-warning/20 backdrop-blur-md border border-brand-warning/50 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl">
@@ -113,15 +145,15 @@ const App: React.FC = () => {
       <header className="h-16 border-b border-brand-border flex items-center justify-between px-6 bg-brand-panel/50 backdrop-blur-md z-50 flex-row-reverse">
         <div className="flex items-center gap-6 flex-row-reverse">
           <div className="text-left">
-            <div className="text-sm font-mono font-bold text-text-primary">{new Date().toLocaleDateString('ar-JO', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-            <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">{new Date().toLocaleTimeString('ar-JO')} ت ع م+3</div>
+            <div className="text-base font-mono font-bold text-text-primary">{new Date().toLocaleDateString('ar-JO', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+            <div className="text-[12px] font-bold text-text-muted uppercase tracking-widest">{new Date().toLocaleTimeString('ar-JO')} ت ع م+3</div>
           </div>
 
           <div className="flex items-center gap-1 flex-row-reverse">
             <button 
               onClick={() => setShowRadar(!showRadar)}
               className={cn(
-                "px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all border",
+                "px-4 py-1.5 rounded-lg text-[12px] font-bold uppercase tracking-widest transition-all border",
                 showRadar ? "bg-brand-accent border-brand-accent text-white" : "bg-transparent border-brand-border text-text-muted"
               )}
             >
@@ -130,7 +162,7 @@ const App: React.FC = () => {
             <button 
               onClick={() => setShowWind(!showWind)}
               className={cn(
-                "px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all border",
+                "px-4 py-1.5 rounded-lg text-[12px] font-bold uppercase tracking-widest transition-all border",
                 showWind ? "bg-brand-accent border-brand-accent text-white" : "bg-transparent border-brand-border text-text-muted"
               )}
             >
@@ -139,8 +171,8 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 bg-brand-bg/50 px-3 py-1.5 rounded-full border border-brand-border flex-row-reverse">
-            <Activity className="w-3 h-3 text-brand-success" />
-            <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">حالة الشبكة: طبيعية</span>
+            <Activity className="w-4 h-4 text-brand-success" />
+            <span className="text-[12px] font-bold text-text-muted uppercase tracking-widest">حالة الشبكة: طبيعية</span>
           </div>
 
           <button 
@@ -154,11 +186,11 @@ const App: React.FC = () => {
 
         <div className="flex items-center gap-4 flex-row-reverse">
           <div className="text-right">
-            <h1 className="text-lg font-bold tracking-tight text-text-primary">غرفة طوارئ بلدية مؤتة والمزار</h1>
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">نظام إدارة الطوارئ</p>
+            <h1 className="text-xl font-bold tracking-tight text-text-primary">غرفة طوارئ بلدية مؤتة والمزار</h1>
+            <p className="text-[12px] font-bold text-text-muted uppercase tracking-widest">نظام إدارة الطوارئ</p>
           </div>
           <div className="bg-brand-danger/20 p-2 rounded-lg">
-            <ShieldAlert className="w-6 h-6 text-brand-danger" />
+            <ShieldAlert className="w-7 h-7 text-brand-danger" />
           </div>
         </div>
       </header>
@@ -168,15 +200,29 @@ const App: React.FC = () => {
         <button 
           onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 z-[60] w-6 h-12 bg-brand-panel border border-brand-border flex items-center justify-center text-gray-400 hover:text-brand-accent transition-all shadow-xl rounded-l-lg",
-            isSidebarCollapsed ? "right-0" : "right-72"
+            "absolute top-1/2 -translate-y-1/2 z-[60] w-6 h-12 bg-brand-panel border border-brand-border flex items-center justify-center text-gray-400 hover:text-brand-accent shadow-xl rounded-l-lg",
+            !isResizing && "transition-all duration-300 ease-in-out",
+            isSidebarCollapsed ? "right-0" : ""
           )}
+          style={{ right: isSidebarCollapsed ? 0 : sidebarWidth }}
           title={isSidebarCollapsed ? "إظهار الشريط الجانبي" : "إخفاء الشريط الجانبي"}
         >
           <div className={cn("transition-transform duration-300", isSidebarCollapsed ? "rotate-180" : "rotate-0")}>
             <Activity className="w-4 h-4 rotate-90" />
           </div>
         </button>
+
+        {/* Resizer Handle */}
+        {!isSidebarCollapsed && (
+          <div 
+            onMouseDown={startResizing}
+            className={cn(
+              "absolute top-0 bottom-0 z-[60] w-1.5 cursor-col-resize hover:bg-brand-accent transition-colors",
+              isResizing ? "bg-brand-accent" : "bg-transparent"
+            )}
+            style={{ right: sidebarWidth - 3 }}
+          />
+        )}
 
         {/* Main Map View */}
         <main className="flex-1 relative">
@@ -202,7 +248,7 @@ const App: React.FC = () => {
         </main>
 
         {/* Right Sidebar */}
-        <Sidebar weather={weather} alerts={alerts} isCollapsed={isSidebarCollapsed} />
+        <Sidebar weather={weather} alerts={alerts} isCollapsed={isSidebarCollapsed} width={sidebarWidth} isResizing={isResizing} />
       </div>
     </div>
   );
